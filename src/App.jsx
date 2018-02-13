@@ -1,14 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-const AppDisplay = () => {
-    return(
+const AppDisplay = ({test}) => (
         <div>
             <h1>
-                Isomorphic react
+                Isomorphic react {test}
             </h1>
         </div>
     );
-};
 
-export default AppDisplay;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        ...state
+    };
+}
+//export default AppDisplay;
+export default connect(mapStateToProps)(AppDisplay);
