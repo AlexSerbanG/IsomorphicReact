@@ -13,7 +13,7 @@ const AppDisplay = () => (
             </h1>
             <div>
                 <Route exact path='/' render={() => <QuestionList/>} />
-                <Route exact path='/question/:id' render={({match})=> <QuestionDetail question_id={match.params.id}/>} />
+                <Route exact path='/questions/:id' render={({match})=> <QuestionDetail question_id={match.params.id}/>} />
             </div>
         </div> 
     );

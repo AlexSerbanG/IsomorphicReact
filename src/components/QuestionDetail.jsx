@@ -17,7 +17,7 @@ const QuestionDetailDisplay = ({title, body, answer_count, tags}) => (
                 </div>
                 :
                 <div>
-                    <h4>Loading Questions</h4>
+                    <h4>Loading rest of the question</h4>
                 </div>
             } 
     </div>
@@ -27,4 +27,4 @@ const mapStateToProps = (state, ownProps) => ({
     ...state.questions.find(({question_id}) => question_id == ownProps.question_id)
 });
 
-export default connect (mapStateToProps)(QuestionDetailDisplay);
+export default connect(mapStateToProps)(QuestionDetailDisplay);
