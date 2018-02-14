@@ -6,11 +6,18 @@ import { argv } from 'optimist';
 import { get } from 'request-promise';
 import { question, questions } from '../data/api-real-url';
 import { delay } from 'redux-saga';
+import getStore from '../src/getStore';
+import { renderToString } from 'react-dom/server';
+import { Provider } from 'react-redux';
+import App from '../src/App';
+import { ConnectedRouter } from 'react-router-redux';
+import createHistory from 'history/createMemoryHistory';
 
 const port = process.env.port || 3000;
 const app = express();
 
 const useLiveData = argv.useLiveData === 'true';
+const useServerRender = argv.useServerRender === 'true';
 
 function * getQuestions(){
     let data;
@@ -63,8 +70,42 @@ if (process.env.NODE_ENV === 'development') {
 
 
 
-app.get(['/'], function * (req, res){
+app.get(['/', '/questions/:id'], function * (req, res){
     let index = yield fs.readFile('./public/index.html', "utf-8");
+
+    const initialState = {
+        questions:[]
+    };
+
+    const history = createHistory({
+        initialEntries:[req.path]
+    });
+
+    if (req.params.id) {
+        const question_id = req.params.id;     
+        const response = yield getQuestion(question_id);
+        const questionDetails = response.items[0];
+        initialState.questions=[{...questionDetails, question_id}];
+    } else {
+        const questions = yield getQuestions();
+        initialState.questions = questions;
+    }
+
+    const store = getStore(history, initialState);
+
+    if (useServerRender) {
+        const appRendered = renderToString(
+            <Provider store={store}>
+                <ConnectedRouter history={history}>
+                    <App />
+                </ConnectedRouter>
+            </Provider>
+        );
+        index = index.replace('<%= preloadedApplication %>', appRendered);
+    } else {
+        index = index.replace('<%= preloadedApplication %>', 'Please wait while we load the application.');
+    }
+
     res.send(index);
 });
 
