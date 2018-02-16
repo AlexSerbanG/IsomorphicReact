@@ -12,6 +12,8 @@ import { Provider } from 'react-redux';
 import App from '../src/App';
 import { ConnectedRouter } from 'react-router-redux';
 import createHistory from 'history/createMemoryHistory';
+import path from 'path';
+import React from 'react';
 
 const port = process.env.port || 3000;
 const app = express();
@@ -66,6 +68,8 @@ if (process.env.NODE_ENV === 'development') {
     }));
 
     app.use(require('webpack-hot-middleware')(compiler));
+} else {
+    app.use(express.static(path.resolve(__dirname, '../dist')));
 }
 
 
