@@ -6,11 +6,11 @@ export const questions = (state=[], {type,questions,question}) => {
     };
 
     if (type === "FETCHED_QUESTIONS") {
-        state = unionWith(state, questions, questionEquality());
+        state = unionWith(state, questions, questionEquality);
     }
     if (type === "FETCHED_QUESTION") {
-        state = unionWith([question], state, questionEquality());
+      console.log(state, " OOO ", [question]);
+      state = unionWith(state, [question], questionEquality);
     }
-
     return state;
 }
